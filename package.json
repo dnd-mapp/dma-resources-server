@@ -14,7 +14,8 @@
         "start": "npx nest start -w",
         "test": "npx jest -c jest.config.ts",
         "test:dev": "npx jest -c jest.config.ts --watchAll",
-        "e2e": "npx jest --config e2e/jest-e2e.json",
+        "e2e": "npx jest -c e2e/jest.config.ts",
+        "e2e:dev": "npx jest -c e2e/jest.config.ts --watchAll",
         "lint": "npx eslint \"{src,test,e2e}/**/*.ts\"",
         "format:check": "npx prettier -l .",
         "format:write": "npx prettier -w ."
