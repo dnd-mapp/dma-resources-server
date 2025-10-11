@@ -1,8 +1,23 @@
 {
-  "$schema": "https://json.schemastore.org/nest-cli",
-  "compilerOptions": {
-    "deleteOutDir": true
-  },
-  "collection": "@nestjs/schematics",
-  "sourceRoot": "src"
+    "$schema": "https://json.schemastore.org/nest-cli",
+    "compilerOptions": {
+        "assets": [],
+        "builder": {
+            "type": "webpack"
+        },
+        "deleteOutDir": true,
+        "plugins": [],
+        "tsConfigPath": "tsconfig.build.json"
+    },
+    "collection": "@nestjs/schematics",
+    "defaultLibraryPrefix": "@dnd-mapp",
+    "entryFile": "main",
+    "generateOptions": {
+        "baseDir": "src/app",
+        "flat": false
+    },
+    "language": "ts",
+    "monorepo": false,
+    "root": "",
+    "sourceRoot": "src"
 }
