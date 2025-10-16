@@ -1,0 +1,8 @@
+services:
+    dma-resources-server:
+        image: ghcr.io/dnd-mapp/dma-resources-server
+        container_name: dma-resources-server
+        restart: unless-stopped
+        ports:
+            - "4200:4300"
+        environment:
