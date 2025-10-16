@@ -1,0 +1,176 @@
+name: Release
+on:
+    workflow_dispatch:
+        inputs:
+            version:
+                description: What kind of version should be released.
+                required: true
+                type: choice
+                options:
+                    - major
+                    - premajor
+                    - minor
+                    - preminor
+                    - patch
+                    - prepatch
+                    - prerelease
+            prerelease-id:
+                description: The ID to use for the prerelease.
+                required: false
+                type: choice
+                options:
+                    - ""
+                    - "alpha"
+                    - "beta"
+                    - "rc"
+permissions:
+    contents: write
+    packages: write
+concurrency:
+    group: release
+    cancel-in-progress: false
+jobs:
+    bump-version:
+        name: Bump version
+        runs-on: ubuntu-22.04
+        outputs:
+            version: ${{ steps.bump-version.outputs.version }}
+            prerelease: ${{ steps.bump-version.outputs.prerelease }}
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v5
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v5
+              with:
+                  cache: npm
+                  node-version-file: .tool-versions
+                  cache-dependency-path: package-lock.json
+
+            - name: Generate GitHub app token
+              id: token
+              uses: actions/create-github-app-token@v2
+              with:
+                  owner: dnd-mapp
+                  repositories: dma-resources-server
+                  app-id: ${{ secrets.AUTH_APP_ID }}
+                  private-key: ${{ secrets.AUTH_APP_PRIVATE_KEY }}
+
+            - name: Configure git
+              run: |
+                  git config user.name "DnD Mapp GitHub Authentication App[bot]"
+                  git config user.email "dnd-mapp-github-authentication-app[bot]@users.noreply.github.com"
+
+            - name: Bump version
+              id: bump-version
+              run: |
+                  release_type="${{ inputs.version }}"
+                  prerelease_id="${{ inputs.prerelease-id }}"
+
+                  if [ -z "$prerelease_id" ]; then
+                      npm version "$release_type" --no-git-tag-version
+                  else
+                      npm version "$release_type" --no-git-tag-version --preid "$prerelease_id"
+                  fi
+
+                  version=$(node -p "require('./package.json').version")
+                  echo "version=$version" >> $GITHUB_OUTPUT
+
+                  if [[ $version == *"-"* ]]; then
+                      prerelease="true"
+                  else
+                      prerelease="false"
+                  fi
+
+                  echo "prerelease=$prerelease" >> $GITHUB_OUTPUT
+
+            - name: Commit and push changes
+              env:
+                  GITHUB_TOKEN: ${{ steps.token.outputs.token }}
+              run: |
+                  git add .
+                  git commit -m "chore: Bump version"
+                  git push origin main
+
+    tag-and-release:
+        name: Create Tag and release
+        runs-on: ubuntu-22.04
+        needs: bump-version
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v5
+              with:
+                  ref: main
+                  fetch-depth: 0
+
+            - name: Generate GitHub app token
+              id: token
+              uses: actions/create-github-app-token@v2
+              with:
+                  owner: dnd-mapp
+                  repositories: dma-resources-server
+                  app-id: ${{ secrets.AUTH_APP_ID }}
+                  private-key: ${{ secrets.AUTH_APP_PRIVATE_KEY }}
+
+            - name: Configure git
+              run: |
+                  git config user.name "DnD Mapp GitHub Authentication App[bot]"
+                  git config user.email "dnd-mapp-github-authentication-app[bot]@users.noreply.github.com"
+
+            - name: Create and Push git tag
+              env:
+                  GITHUB_TOKEN: ${{ steps.token.outputs.token }}
+              run: |
+                  version="${{ needs.bump-version.outputs.version }}"
+
+                  git tag "v$version"
+                  git push origin "v$version"
+
+            - name: Create GitHub release
+              uses: softprops/action-gh-release@v2
+              with:
+                  tag_name: v${{ needs.bump-version.outputs.version }}
+                  name: v${{ needs.bump-version.outputs.version }}
+                  token: ${{ steps.token.outputs.token }}
+                  prerelease: ${{ needs.bump-version.outputs.prerelease == 'true' }}
+                  make_latest: ${{ needs.bump-version.outputs.prerelease == 'false' }}
+    docker-build:
+        name: Build and push Docker image
+        needs:
+            - bump-version
+            - tag-and-release
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v5
+              with:
+                  ref: main
+                  fetch-depth: 0
+
+            - name: Generate tags
+              id: tags
+              run: |
+                  version="${{ needs.bump-version.outputs.version }}"
+                  is_prerelease="${{ needs.bump-version.outputs.prerelease }}"
+
+                  tags="${version}"
+
+                  if [ "$is_prerelease" = "false" ]; then
+                      if [[ $version =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+                          major="${BASH_REMATCH[1]}"
+                          minor="${BASH_REMATCH[2]}"
+
+                          tags="${tags},${major}.${minor}"
+                          tags="${tags},${major}"
+                          tags="${tags},latest"
+                      fi
+                  fi
+
+                  echo "tags=${tags}" >> $GITHUB_OUTPUT
+                  echo "Generated tags: ${tags}"
+
+            - name: Build and push Docker image
+              uses: ./.github/actions/docker-build
+              with:
+                  tags: ${{ steps.tags.outputs.tags  }}
+                  token: ${{ secrets.GITHUB_TOKEN }}

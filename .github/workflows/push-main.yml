@@ -1,0 +1,52 @@
+name: Push to main branch
+on:
+    push:
+        branches:
+            - main
+permissions:
+    contents: read
+    packages: write
+jobs:
+    ci:
+        name: CI
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v5
+
+            - name: CI
+              uses: ./.github/actions/ci
+    docker-build:
+        name: Build and push Docker image
+        needs: ci
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v5
+
+            - name: Build and push Docker image
+              uses: ./.github/actions/docker-build
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+    #    TODO: Add job to deploy to test
+    e2e:
+        name: E2E testing
+        needs: ci
+        runs-on: ubuntu-22.04
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v5
+
+            - name: Setup Node.js
+              uses: actions/setup-node@v5
+              with:
+                  cache: npm
+                  node-version-file: .tool-versions
+                  cache-dependency-path: package-lock.json
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Run E2E tests
+              run: npm run e2e
+#    TODO: Add job to deploy to dev

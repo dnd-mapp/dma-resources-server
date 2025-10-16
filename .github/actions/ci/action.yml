@@ -1,0 +1,31 @@
+name: CI
+description: Runs Continuous Integration
+runs:
+    using: composite
+    steps:
+        - name: Setup Node.js
+          uses: actions/setup-node@v5
+          with:
+              cache: npm
+              node-version-file: .tool-versions
+              cache-dependency-path: package-lock.json
+
+        - name: Install dependencies
+          shell: bash
+          run: npm ci
+
+        - name: Check formatting
+          shell: bash
+          run: npm run format:check
+
+        - name: Check linting
+          shell: bash
+          run: npm run lint
+
+        - name: Compile code
+          shell: bash
+          run: npm run build
+
+        - name: Run tests
+          shell: bash
+          run: npm run test
