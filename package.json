@@ -6,12 +6,17 @@
         "name": "NoNamer777",
         "email": "mail.dndmapp@gmail.com"
     },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/dnd-mapp/dma-resources-server.git"
+    },
     "private": true,
     "license": "AGPL-3.0",
     "scripts": {
+        "nest": "npx nest",
+        "start": "npx nest start -w",
         "build": "npx nest build",
         "build:dev": "npx nest build -w",
-        "start": "npx nest start -w",
         "test": "npx jest -c jest.config.ts",
         "test:dev": "npx jest -c jest.config.ts --watchAll",
         "e2e": "npx jest -c e2e/jest.config.ts",
