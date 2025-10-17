@@ -1,5 +1,5 @@
 {
-    "name": "dma-resources-server",
+    "name": "@dnd-mapp/dma-resources-server",
     "version": "0.0.1",
     "description": "The static resources server of the D&D Mapp platform",
     "author": {
