@@ -1,9 +1,30 @@
 const { resolve } = require('path');
+const GeneratePackageJsonPlugin = require('generate-package-json-webpack-plugin');
+const nodeExternals = require('webpack-node-externals');
 
-module.exports = (options) => ({
-    ...options,
-    output: {
-        path: resolve(__dirname, 'dist/dma-resources-server'),
-        clean: true,
+const basePackageJson = {
+    name: '@dnd-mapp/dma-resources-server',
+    description: 'The static resources server of the D&D Mapp platform',
+    license: 'AGPL-3.0',
+    author: {
+        name: 'NoNamer777',
+        email: 'mail.dndmapp@gmail.com',
     },
-});
+    repository: {
+        type: 'git',
+        url: 'git+https://github.com/dnd-mapp/dma-resources-server.git',
+    },
+    main: './main.js',
+};
+
+module.exports = (options) => {
+    return {
+        ...options,
+        externals: [nodeExternals()],
+        output: {
+            path: resolve(__dirname, 'dist/dma-resources-server'),
+            clean: true,
+        },
+        plugins: [...options.plugins, new GeneratePackageJsonPlugin(basePackageJson)],
+    };
+};
