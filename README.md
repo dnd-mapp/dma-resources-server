@@ -1,6 +1,6 @@
 # DMA Resources Server
 
-[![CI Workflow status](https://github.com/dnd-mapp/dma-resources-server/actions/workflows/node.js.yml/badge.svg)](https://github.com/dnd-mapp/dma-resources-server/actions/workflows/push-main.yml?branch=main&logo=github&label=CI)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/dnd-mapp/dma-resources-server/push-main.yml?branch=main&logo=github&label=CI)](https://github.com/dnd-mapp/dma-resources-server/actions/workflows/push-main.yml)
 [![License: AGPL-3.0](https://img.shields.io/github/license/dnd-mapp/dma-resources-server
 )](./LICENSE)
 
