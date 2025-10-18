@@ -27,10 +27,11 @@ export function startServer() {
     serverProcess.on('error', (error) => {
         console.error(error);
 
+        if (!processPid) return;
         if (platform() === 'win32') {
             exec(`taskkill /PID ${processPid} /T /F`);
         } else {
-            kill(-processPid!);
+            kill(-processPid);
         }
         serverProcess = null;
         processPid = undefined;
@@ -40,10 +41,11 @@ export function startServer() {
 export function stopServer() {
     if (!hasStartedServer) return;
 
+    if (!processPid) return;
     if (platform() === 'win32') {
         exec(`taskkill /PID ${processPid} /T /F`);
     } else {
-        kill(-processPid!);
+        kill(-processPid);
     }
     serverProcess = null;
     processPid = undefined;
