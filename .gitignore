@@ -29,6 +29,7 @@ reports/
 
 # Certificates, configuration files, and dot env files
 certificate*.pem
+**/.env
 
 # System files
 .DS_Store
