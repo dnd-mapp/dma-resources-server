@@ -24,6 +24,11 @@ export function startServer() {
 
     processPid = serverProcess.pid;
 
+    serverProcess.on('close', () => {
+        serverProcess = null;
+        processPid = undefined;
+    });
+
     serverProcess.on('error', (error) => {
         console.error(error);
 
@@ -33,8 +38,6 @@ export function startServer() {
         } else {
             kill(-processPid);
         }
-        serverProcess = null;
-        processPid = undefined;
     });
 }
 
@@ -47,8 +50,6 @@ export function stopServer() {
     } else {
         kill(-processPid);
     }
-    serverProcess = null;
-    processPid = undefined;
 }
 
 export async function waitUntilServerIsRunning(url: string) {
