@@ -25,7 +25,7 @@ export default tsEslint.config(
     },
     {
         rules: {
-            '@typescript-eslint/no-floating-promises': 'off'
+            '@typescript-eslint/no-floating-promises': 'off',
         },
     },
 );
