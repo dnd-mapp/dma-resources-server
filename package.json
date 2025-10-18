@@ -17,6 +17,7 @@
         "start": "npx nest start -w",
         "build": "npx nest build",
         "build:dev": "npx nest build -w",
+        "docker:build": "docker buildx bake -f .docker/docker-bake.hcl",
         "test": "npx jest -c jest.config.ts",
         "test:dev": "npx jest -c jest.config.ts --watchAll",
         "e2e": "npx jest -c e2e/jest.config.ts",
