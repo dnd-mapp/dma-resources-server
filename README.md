@@ -1,7 +1,7 @@
 # DMA Resources Server
 
-[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/dnd-mapp/dma-resources-server/push-main.yml?branch=main&logo=github&label=CI)](https://github.com/dnd-mapp/dma-resources-server/actions/workflows/push-main.yml)
-[![License: AGPL-3.0](https://img.shields.io/github/license/dnd-mapp/dma-resources-server
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/dnd-mapp/dma-resources-server/push-main.yml?branch=main&logo=github)](https://github.com/dnd-mapp/dma-resources-server/actions/workflows/push-main.yml)
+[![GitHub License](https://img.shields.io/github/license/dnd-mapp/dma-resources-server
 )](./LICENSE)
 
 The resources backend server for the D&D Mapp platform, built with NestJS. This service is responsible for managing and serving various static resources required by the D&D Mapp platform and other associated services, such as Spells, Races, Classes, Items, Backgrounds, etc.
@@ -250,28 +250,14 @@ The application's configuration is managed through environment variables, primar
 
 Key configuration parameters include:
 
-*   `PORT`: The port the server listens on (default: `3000`).
-*   Database connection details (`DATABASE_HOST`, `DATABASE_PORT`, etc.).
+*   `DMA_HOST`: The hostname the server listens on (default: `localhost.resources.dndmapp.dev`).
+*   `DMA_PORT`: The port the server listens on (default: `3000`).
 
-For a full list of configurable options, please refer to the `.env.template` file and the source code (e.g., `src/config/app.config.ts`).
-
-## Contributing
-
-We welcome contributions to the DMA Resources Server! Please follow these steps to contribute:
-
-1.  **Fork the repository.**
-2.  **Create a new branch:** `git checkout -b feature/your-feature-name` or `bugfix/your-bugfix-name`.
-3.  **Make your changes.**
-4.  **Write tests** for your changes.
-5.  **Ensure tests pass:** `npm run test`.
-6.  **Lint and format your code:** `npm run lint && npm run format:check`.
-7.  **Commit your changes:** `git commit -m "feat: Add new feature"`. (Consider using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) for clear commit messages).
-8.  **Push to your fork:** `git push origin feature/your-feature-name`.
-9.  **Open a Pull Request** against the `main` branch of this repository, describing your changes in detail.
+For a full list of configurable options, please refer to the `.env.template` file.
 
 ## License
 
-This project is licensed under the AGPL-3.0 License - see the [LICENSE](LICENSE) file for details.
+This project is licensed as **"All Rights Reserved"** by [NoNamer777](https://github.com/NoNamer777). For full details regarding the terms and conditions, please refer to the [LICENSE](LICENSE) in the repository.
 
 ## Contact
 

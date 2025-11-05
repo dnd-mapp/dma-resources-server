@@ -11,7 +11,7 @@
         "url": "git+https://github.com/dnd-mapp/dma-resources-server.git"
     },
     "private": true,
-    "license": "AGPL-3.0",
+    "license": "UNLICENSED",
     "scripts": {
         "nest": "npx nest",
         "start": "npx nest start -w",
