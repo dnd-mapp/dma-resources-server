@@ -13,6 +13,7 @@ RUN npm run build && \
     cd dist/dma-resources-server && \
     npm i
 
+COPY .docker/health-check.js dist/dma-resources-server/health-check.js
 
 FROM node:22-alpine
 
@@ -22,5 +23,7 @@ COPY --from=builder /server/dist/dma-resources-server .
 
 ENV DMA_HOST="0.0.0.0" \
     DMA_PORT="3000"
+
+HEALTHCHECK CMD ["node", "/server/health-check.js"]
 
 CMD ["node", "/server/main.js"]
