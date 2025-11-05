@@ -1,15 +1,18 @@
-import { getServerPort } from './get-server-port';
-import { isServerRunning } from './is-server-running';
-import { startServer, waitUntilServerIsRunning } from './server-process';
+import { config, DEFAULT_SERVER_HOST, DEFAULT_SERVER_PORT } from './constants';
+import { isServerAvailable, parsePort, startServer, tryCatchAsync, waitForServerAvailable } from './functions';
 
-const host = process.env['HOST'] || 'localhost';
-const port = getServerPort(3000);
+async function setup() {
+    console.log('\n\nRunning global setup...');
 
-export default async () => {
-    const url = `http://${host}:${port}/server`;
+    config.host = process.env['DMA_HOST'] ?? DEFAULT_SERVER_HOST;
+    config.port = parsePort(process.env['DMA_PORT'], DEFAULT_SERVER_PORT);
 
-    if (!(await isServerRunning(url))) {
+    const { data: serverIsRunning, error } = await tryCatchAsync(isServerAvailable());
+
+    if (error || !serverIsRunning) {
         startServer();
-        await waitUntilServerIsRunning(url);
+        await waitForServerAvailable();
     }
-};
+}
+
+export default setup;

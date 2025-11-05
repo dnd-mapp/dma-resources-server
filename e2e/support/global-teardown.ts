@@ -1,5 +1,8 @@
-import { stopServer } from './server-process';
+import { hasStartedServer, stopServer } from './functions';
 
-export default () => {
-    stopServer();
-};
+async function teardown() {
+    if (!hasStartedServer()) return;
+    await stopServer();
+}
+
+export default teardown;
