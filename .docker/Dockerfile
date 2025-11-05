@@ -20,8 +20,6 @@ WORKDIR /server
 
 COPY --from=builder /server/dist/dma-resources-server .
 
-EXPOSE 3000
-
 ENV DMA_HOST="0.0.0.0" \
     DMA_PORT="3000"
 
