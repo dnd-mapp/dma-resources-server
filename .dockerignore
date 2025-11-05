@@ -1,4 +1,7 @@
-.docker/
+.docker/*
+!.docker/health-check.js
+!.docker/README.md
+
 .github/
 .gitignore
 .prettierignore
