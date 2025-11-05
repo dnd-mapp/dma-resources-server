@@ -1,15 +1,14 @@
 import eslint from '@eslint/js';
-import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import eslintConfigPrettier from 'eslint-config-prettier';
 import globals from 'globals';
-import tsEslint from 'typescript-eslint';
+import tseslint from 'typescript-eslint';
 
-export default tsEslint.config(
+export default tseslint.config(
     {
         ignores: ['eslint.config.mjs'],
     },
     eslint.configs.recommended,
-    ...tsEslint.configs.recommendedTypeChecked,
-    eslintPluginPrettierRecommended,
+    tseslint.configs.recommendedTypeChecked,
     {
         languageOptions: {
             globals: {
@@ -28,4 +27,5 @@ export default tsEslint.config(
             '@typescript-eslint/no-floating-promises': 'off',
         },
     },
+    eslintConfigPrettier,
 );
