@@ -4,6 +4,6 @@ services:
         container_name: dma-resources-server
         restart: unless-stopped
         ports:
-            - "4200:4300"
+            - "3000:3000"
         env_file:
             - ./.env
