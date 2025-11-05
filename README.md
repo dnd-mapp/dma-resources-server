@@ -1,8 +1,6 @@
 # DMA Resources Server
 
 [![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/dnd-mapp/dma-resources-server/push-main.yml?branch=main&logo=github)](https://github.com/dnd-mapp/dma-resources-server/actions/workflows/push-main.yml)
-[![GitHub License](https://img.shields.io/github/license/dnd-mapp/dma-resources-server
-)](./LICENSE)
 
 The resources backend server for the D&D Mapp platform, built with NestJS. This service is responsible for managing and serving various static resources required by the D&D Mapp platform and other associated services, such as Spells, Races, Classes, Items, Backgrounds, etc.
 
