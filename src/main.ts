@@ -1,12 +1,13 @@
 import { Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
-import { AppModule } from './app';
+import { AppConfiguration, AppModule } from './app';
 
 const app = await NestFactory.create(AppModule, new FastifyAdapter());
 
-const port = process.env['DMA_PORT'] ?? 3000;
-const host = process.env['DMA_HOST'] ?? 'localhost';
+const configService = app.get(ConfigService);
+const { host, port } = configService.get<AppConfiguration>('app');
 
 app.setGlobalPrefix('server');
 
