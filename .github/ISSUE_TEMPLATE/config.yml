@@ -1,8 +1,0 @@
-blank_issues_enabled: false
-contact_links:
-    - name: Ask a question
-      url: https://github.com/dnd-mapp/dma-web-client/discussions
-      about: Ask and answer questions with the community.
-    - name: Get general support
-      url: https://github.com/dnd-mapp/dma-web-client/blob/main/SUPPORT.md
-      about: Find resources for general support with the project.
