@@ -28,5 +28,5 @@ runs:
               ACTIONS_CACHE_SERVICE_V2: true
               TAGS: ${{ inputs.tags }}
           with:
-              files: .docker/docker-bake.hcl
+              files: .docker/bake.hcl
               push: true
