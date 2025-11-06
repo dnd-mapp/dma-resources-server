@@ -13,6 +13,16 @@ class EnvironmentVariables {
     @IsNumber({ allowInfinity: false, allowNaN: false, maxDecimalPlaces: 0 })
     @IsOptional()
     [EnvironmentVariableNames.PORT]?: number;
+
+    @IsNotEmpty()
+    @IsString()
+    @IsOptional()
+    [EnvironmentVariableNames.SSL_CERT_PATH]: string;
+
+    @IsNotEmpty()
+    @IsString()
+    @IsOptional()
+    [EnvironmentVariableNames.SSL_KEY_PATH]: string;
 }
 
 export async function validateEnvVariables(envVariables: Record<string, unknown>) {
