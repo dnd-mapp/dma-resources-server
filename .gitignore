@@ -31,6 +31,7 @@ src/prisma-client
 # Certificates, configuration files, and dot env files
 certificate*.pem
 **/.env
+**/root-password.txt
 
 # System files
 .DS_Store
