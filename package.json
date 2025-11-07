@@ -15,6 +15,7 @@
     "scripts": {
         "nest": "npx nest",
         "start": "npx nest start -w",
+        "seed": "ts-node prisma/seed.ts",
         "build": "npx nest build",
         "build:dev": "npx nest build -w",
         "docker:build": "docker buildx bake -f .docker/bake.hcl",
