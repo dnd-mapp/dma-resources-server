@@ -58,5 +58,12 @@ jobs:
             - name: Prepare MariaDB database root user password
               run: echo -n "${{ secrets.MARIADB_ROOT_PASSWORD }}" > e2e/root-password.txt
 
+            - name: Login to Docker
+              uses: docker/login-action@v3
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+
             - name: Run E2E tests
               run: npm run e2e:ci
