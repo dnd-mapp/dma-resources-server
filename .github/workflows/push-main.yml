@@ -28,10 +28,10 @@ jobs:
               uses: ./.github/actions/docker-build
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
-    #    TODO: Add job to deploy to test
     e2e:
         name: E2E testing
-        needs: ci
+        needs:
+            - docker-build
         runs-on: ubuntu-22.04
         steps:
             - name: Checkout repository
@@ -48,5 +48,4 @@ jobs:
               run: npm ci
 
             - name: Run E2E tests
-              run: npm run e2e
-#    TODO: Add job to deploy to dev
+              run: npm run e2e:ci

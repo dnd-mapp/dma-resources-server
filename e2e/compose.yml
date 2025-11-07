@@ -1,0 +1,30 @@
+services:
+    mariadb:
+        image: mariadb
+        container_name: mariadb
+        restart: unless-stopped
+        ports:
+            - "3306:3306"
+        healthcheck:
+            test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+            start_period: 10s
+            interval: 10s
+            timeout: 5s
+            retries: 3
+        env_file:
+            - ../.env
+        environment:
+            MARIADB_ROOT_PASSWORD_FILE: /run/secrets/mariadb_root_password
+        secrets:
+            - mariadb_root_password
+    dma-resources-server:
+        image: ghcr.io/dnd-mapp/dma-resources-server
+        container_name: dma-resources-server
+        restart: unless-stopped
+        ports:
+            - "3000:3000"
+        env_file:
+            - ../.env
+secrets:
+    mariadb_root_password:
+        file: ./root-password.txt
