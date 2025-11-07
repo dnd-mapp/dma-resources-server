@@ -12,8 +12,7 @@ services:
             timeout: 5s
             retries: 3
         env_file:
-            - path: ../.env
-              required: false
+            - ../.env
         environment:
             MARIADB_ROOT_PASSWORD_FILE: /run/secrets/mariadb_root_password
         secrets:
@@ -25,8 +24,7 @@ services:
         ports:
             - "3000:3000"
         env_file:
-            - path: ../.env
-              required: false
+            - ../.env
 secrets:
     mariadb_root_password:
         file: ./root-password.txt

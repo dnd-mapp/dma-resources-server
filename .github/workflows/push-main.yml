@@ -13,7 +13,6 @@ env:
     MARIADB_SCHEMA: dma_e2e_resources_db
     MARIADB_USERNAME: dma_e2e_resources_db_user
     MARIADB_PASSWORD: ${{ secrets.MARIADB_PASSWORD }}
-    MARIADB_URL: "mysql://${MARIADB_USERNAME}:${MARIADB_PASSWORD}@${MARIADB_HOST}:${MARIADB_PORT}/${MARIADB_SCHEMA}"
 jobs:
     ci:
         name: CI
@@ -56,7 +55,16 @@ jobs:
               run: npm ci
 
             - name: Prepare MariaDB database root user password
-              run: echo -n "${{ secrets.MARIADB_ROOT_PASSWORD }}" > e2e/root-password.txt
+              run: |
+                  echo -n "${{ secrets.MARIADB_ROOT_PASSWORD }}" > e2e/root-password.txt
+                  echo """
+                      MARIADB_HOST="${{ env.MARIADB_HOST }}"
+                      MARIADB_PORT="${{ env.MARIADB_PORT }}"
+                      MARIADB_SCHEMA="${{ env.MARIADB_SCHEMA }}"
+                      MARIADB_USERNAME="${{ env.MARIADB_USERNAME }}"
+                      MARIADB_PASSWORD="${{ env.MARIADB_PASSWORD }}"
+                      MARIADB_URL="mysql://${MARIADB_USERNAME}:${MARIADB_PASSWORD}@${MARIADB_HOST}:${MARIADB_PORT}/${MARIADB_SCHEMA}"
+                  """ > .env
 
             - name: Login to Docker
               uses: docker/login-action@v3
