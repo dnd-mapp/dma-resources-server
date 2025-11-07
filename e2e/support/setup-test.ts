@@ -1,3 +1,4 @@
-function setupTest() {}
+import { exec } from 'shelljs';
 
-export default setupTest;
+exec('npx prisma migrate reset -f');
+exec('npx prisma db seed');
