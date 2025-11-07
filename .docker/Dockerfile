@@ -8,7 +8,8 @@ RUN npm ci
 
 COPY . .
 
-RUN npm run build && \
+RUN npx prisma generate client && \
+    npm run build && \
     rm -rf node_modules && \
     cd dist/dma-resources-server && \
     npm i
