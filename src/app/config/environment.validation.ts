@@ -17,12 +17,37 @@ class EnvironmentVariables {
     @IsNotEmpty()
     @IsString()
     @IsOptional()
-    [EnvironmentVariableNames.SSL_CERT_PATH]: string;
+    [EnvironmentVariableNames.SSL_CERT_PATH]?: string;
 
     @IsNotEmpty()
     @IsString()
     @IsOptional()
-    [EnvironmentVariableNames.SSL_KEY_PATH]: string;
+    [EnvironmentVariableNames.SSL_KEY_PATH]?: string;
+
+    @IsNotEmpty()
+    @IsString()
+    @IsOptional()
+    [EnvironmentVariableNames.MARIADB_USERNAME]: string;
+
+    @IsNotEmpty()
+    @IsString()
+    [EnvironmentVariableNames.MARIADB_PASSWORD]: string;
+
+    @IsNotEmpty()
+    @IsString()
+    @IsOptional()
+    [EnvironmentVariableNames.MARIADB_HOST]?: string;
+
+    @Max(MAX_PORT_RANGE)
+    @Min(MIN_PORT_RANGE)
+    @IsNumber({ allowInfinity: false, allowNaN: false, maxDecimalPlaces: 0 })
+    @IsOptional()
+    [EnvironmentVariableNames.MARIADB_PORT]?: number;
+
+    @IsNotEmpty()
+    @IsString()
+    @IsOptional()
+    [EnvironmentVariableNames.MARIADB_SCHEMA]?: string;
 }
 
 export async function validateEnvVariables(envVariables: Record<string, unknown>) {
