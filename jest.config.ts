@@ -2,7 +2,7 @@ import { Config } from 'jest';
 
 const config: Config = {
     collectCoverage: true,
-    collectCoverageFrom: ['src/**/*.ts', '!src/**/index.ts', '!src/main.ts'],
+    collectCoverageFrom: ['src/**/*.ts', '!src/**/index.ts', '!src/main.ts', '!src/prisma-client'],
     coverageDirectory: '<rootDir>/reports/dma-resources-server',
     coverageReporters: ['text-summary', 'html'],
     // coverageThreshold: {

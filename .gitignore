@@ -5,6 +5,7 @@
 
 reports/
 .jest/
+src/prisma-client
 
 # Node
 /node_modules
@@ -34,3 +35,4 @@ certificate*.pem
 # System files
 .DS_Store
 Thumbs.db
+
