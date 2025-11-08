@@ -15,11 +15,14 @@ export class DatabaseService implements OnModuleInit, OnApplicationShutdown {
     private readonly _prismaClient: PrismaClient;
 
     public constructor(configService: ConfigService) {
-        const { host, port } = configService.get<DatabaseConfiguration>('database');
+        const { host, port, username, password, schema } = configService.get<DatabaseConfiguration>('database');
 
         this.adapter = new PrismaMariaDb({
             host: host,
             port: port,
+            user: username,
+            password: password,
+            database: schema,
         });
 
         this._prismaClient = new PrismaClient({ adapter: this.adapter });
