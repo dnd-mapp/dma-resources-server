@@ -5,7 +5,8 @@
 
 reports/
 .jest/
-src/prisma-client
+src/prisma-client/*
+!src/prisma-client/__mocks__
 
 # Node
 /node_modules

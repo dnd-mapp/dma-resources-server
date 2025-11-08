@@ -1,8 +1,9 @@
 import { Config } from 'jest';
 
 const config: Config = {
+    clearMocks: true,
     collectCoverage: true,
-    collectCoverageFrom: ['src/**/*.ts', '!src/**/index.ts', '!src/main.ts', '!src/prisma-client'],
+    collectCoverageFrom: ['src/**/*.ts', '!src/**/index.ts', '!src/main.ts', '!src/prisma-client/**/*'],
     coverageDirectory: '<rootDir>/reports/dma-resources-server',
     coverageReporters: ['text-summary', 'html'],
     // coverageThreshold: {
@@ -15,6 +16,7 @@ const config: Config = {
     // },
     displayName: 'dma-resources-server',
     moduleNameMapper: {
+        '@dnd-mapp/dma-resources-server/test': ['<rootDir>/test/index.ts'],
         '@dnd-mapp/dma-resources-server/models': ['<rootDir>/models/index.ts'],
     },
     preset: './jest-preset.mjs',

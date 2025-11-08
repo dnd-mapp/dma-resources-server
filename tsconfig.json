@@ -22,6 +22,7 @@
         "noUnusedParameters": true,
         "outDir": "dist/dma-resources-server",
         "paths": {
+            "@dnd-mapp/dma-resources-server/test": ["test/index.ts"],
             "@dnd-mapp/dma-resources-server/models": ["models/index.ts"]
         },
         "rootDir": ".",
