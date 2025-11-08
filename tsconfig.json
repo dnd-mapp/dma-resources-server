@@ -21,7 +21,9 @@
         "noUnusedLocals": true,
         "noUnusedParameters": true,
         "outDir": "dist/dma-resources-server",
-        "paths": {},
+        "paths": {
+            "@dnd-mapp/dma-resources-server/models": ["models/index.ts"]
+        },
         "rootDir": ".",
         "skipDefaultLibCheck": true,
         "skipLibCheck": true,

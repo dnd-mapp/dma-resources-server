@@ -13,8 +13,11 @@ const config: Config = {
     //         statements: 80,
     //     },
     // },
-    preset: './jest-preset.mjs',
     displayName: 'dma-resources-server',
+    moduleNameMapper: {
+        '@dnd-mapp/dma-resources-server/models': ['<rootDir>/models/index.ts'],
+    },
+    preset: './jest-preset.mjs',
     rootDir: __dirname,
     setupFilesAfterEnv: ['<rootDir>/test/setup-test.ts'],
     testMatch: '<rootDir>/src/**/*.spec.ts',

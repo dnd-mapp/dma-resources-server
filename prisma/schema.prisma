@@ -11,3 +11,10 @@ datasource db {
     url               = env("MARIADB_URL")
     shadowDatabaseUrl = env("MARIADB_SHADOW_URL")
 }
+
+model Spells {
+    id   String @id() @default(nanoid())
+    name String @unique(map: "uq_spell_name")
+
+    @@map(name: "spells")
+}
