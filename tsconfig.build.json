@@ -1,7 +1,7 @@
 {
     "extends": "./tsconfig.json",
     "include": ["src/**/*.ts"],
-    "exclude": ["node_modules", "e2e", "dist", "**/*spec.ts"],
+    "exclude": ["node_modules", "e2e", "dist", "**/*spec.ts", "**/__mocks__/**/*"],
     "compilerOptions": {
         "types": ["node"]
     }
