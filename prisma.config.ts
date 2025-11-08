@@ -11,5 +11,6 @@ export default defineConfig({
     engine: 'classic',
     datasource: {
         url: process.env['MARIADB_URL'],
+        shadowDatabaseUrl: process.env['MARIADB_SHADOW_URL'],
     },
 });
