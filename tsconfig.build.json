@@ -1,6 +1,6 @@
 {
     "extends": "./tsconfig.json",
-    "include": ["src/**/*.ts"],
+    "include": ["src/**/*.ts", "models/**/*.ts"],
     "exclude": ["node_modules", "e2e", "dist", "**/*spec.ts", "**/__mocks__/**/*"],
     "compilerOptions": {
         "types": ["node"]
