@@ -18,6 +18,7 @@ const config: Config = {
     moduleNameMapper: {
         '@dnd-mapp/dma-resources-server/test': ['<rootDir>/test/index.ts'],
         '@dnd-mapp/dma-resources-server/models': ['<rootDir>/models/index.ts'],
+        '@dnd-mapp/dma-resources-server/prisma/*': ['<rootDir>/src/prisma-client/*'],
     },
     preset: './jest-preset.mjs',
     rootDir: __dirname,

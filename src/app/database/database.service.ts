@@ -1,7 +1,7 @@
+import { PrismaClient } from '@dnd-mapp/dma-resources-server/prisma/client';
 import { Injectable, OnApplicationShutdown, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
-import { PrismaClient } from '../../prisma-client/client';
 import { DatabaseConfiguration } from '../config';
 
 @Injectable()
