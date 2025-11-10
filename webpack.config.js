@@ -25,6 +25,11 @@ module.exports = (options) => {
             path: resolve(__dirname, 'dist/dma-resources-server'),
             clean: true,
         },
-        plugins: [...options.plugins, new GeneratePackageJsonPlugin(basePackageJson)],
+        plugins: [
+            ...options.plugins,
+            new GeneratePackageJsonPlugin(basePackageJson, {
+                excludeDependencies: ['node:path', 'node:url', 'node:buffer'],
+            }),
+        ],
     };
 };
