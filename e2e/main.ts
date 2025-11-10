@@ -81,19 +81,20 @@ async function prepareDatabase() {
 }
 
 async function spinUpDockerContainers(setup: Setup) {
-    const commandResult = exec(`docker compose -f ${composeFilePath} pull`);
+    const shellString = exec(`docker compose -f ${composeFilePath} pull`);
 
-    if (commandResult.code !== 0) {
+    if (shellString.code !== 0) {
         console.error('Failed to pull Docker images.');
-        throw new Error(commandResult.stderr);
+        throw new Error(shellString.stderr);
     }
     if (setup === Setups.FULL) {
         console.log('Running full E2E setup with Docker Compose...');
 
-        const commandResult = exec(`docker compose -f ${composeFilePath} up -d`).code;
+        const shellString = exec(`docker compose -f ${composeFilePath} up -d`);
 
-        if (commandResult !== 0) {
-            throw new Error('Failed to start full Docker Compose setup.');
+        if (shellString.code !== 0) {
+            console.error('Failed to start full Docker Compose setup.');
+            throw new Error(shellString.stderr);
         }
         console.log('Docker Compose services started.');
 
@@ -102,10 +103,12 @@ async function spinUpDockerContainers(setup: Setup) {
     if (setup === Setups.HALF) {
         console.log('Running half E2E setup with Docker Compose...');
 
-        const commandResult = exec(`docker compose -f ${composeFilePath} up -d dma-resources-server`).code;
+        const shellString = exec(`docker compose -f ${composeFilePath} up -d dma-resources-server`);
 
-        if (commandResult !== 0) {
-            throw new Error('Failed to start dma-resources-server with Docker Compose.');
+        if (shellString.code !== 0) {
+            console.log();
+            console.error('Failed to start dma-resources-server with Docker Compose.');
+            throw new Error(shellString.stderr);
         }
         console.log('dma-resources-server container started.');
     }
@@ -114,10 +117,11 @@ async function spinUpDockerContainers(setup: Setup) {
 function runE2ETests() {
     console.log('Running E2E tests...');
 
-    const commandResult = exec('npm run e2e').code;
+    const shellString = exec('npm run e2e');
 
-    if (commandResult !== 0) {
-        throw new Error('E2E tests failed.');
+    if (shellString.code !== 0) {
+        console.error('E2E tests failed.');
+        throw new Error(shellString.stderr);
     }
     console.log('E2E tests completed successfully.');
 }
@@ -125,11 +129,11 @@ function runE2ETests() {
 function cleanupDockerContainers() {
     console.log('Cleaning up Docker containers...');
 
-    const commandResult = exec(`docker compose -f ${composeFilePath} down`).code;
+    const shellString = exec(`docker compose -f ${composeFilePath} down`);
 
-    if (commandResult !== 0) {
-        console.warn('Failed to clean up Docker containers.');
-        return;
+    if (shellString.code !== 0) {
+        console.error('Failed to clean up Docker containers.');
+        throw new Error(shellString.stderr);
     }
     console.log('Docker containers have been cleaned up.');
 }
