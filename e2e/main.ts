@@ -81,6 +81,12 @@ async function prepareDatabase() {
 }
 
 async function spinUpDockerContainers(setup: Setup) {
+    const commandResult = exec(`docker compose -f ${composeFilePath} pull`);
+
+    if (commandResult.code !== 0) {
+        console.error('Failed to pull Docker images.');
+        throw new Error(commandResult.stderr);
+    }
     if (setup === Setups.FULL) {
         console.log('Running full E2E setup with Docker Compose...');
 
