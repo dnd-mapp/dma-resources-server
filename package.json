@@ -24,7 +24,7 @@
         "e2e": "npx jest -c e2e/jest.config.ts",
         "e2e:ci": "npx ts-node -P e2e/tsconfig.spec.json e2e/main.ts",
         "e2e:dev": "npx jest -c e2e/jest.config.ts --watchAll",
-        "lint": "npx eslint \"{src,test,e2e}/**/*.ts\"",
+        "lint": "npx eslint \"{src,test,e2e,models}/**/*.ts\"",
         "format:check": "npx prettier -l .",
         "format:write": "npx prettier -w ."
     },
