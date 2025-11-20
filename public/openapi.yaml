@@ -1,0 +1,168 @@
+openapi: "3.1.0"
+info:
+    version: "0.1.0"
+    title: "D&D Mapp: Resources Server"
+    description: "The Rest API that serves static game resources for the D&D Mapp platform."
+servers:
+    - url: "https://resources.dndmapp.nl.eu.org/server"
+      description: "Production server"
+    - url: "https://resources-dev.dndmapp.nl.eu.org/server"
+      description: "Remote dev server"
+    - url: "https://resources-test.dndmapp.nl.eu.org/server"
+      description: "Remote E2E test server"
+    - url: "https://localhost.resources.dndmapp.dev/server"
+      description: "Local dev server with SSL"
+    - url: "http://localhost:3000/server"
+      description: "Local dev server without SSL"
+paths:
+    /health/live:
+        get:
+            description: >-
+                A simple health check, mostly used for Docker or Kubernetes to check if
+                a container is live. This check simply returns whether the server
+                process is up and running.
+            responses:
+                "200":
+                    description: "The status of the server"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/StatusDto"
+                            examples:
+                                Healthy:
+                                    value:
+                                        status: "ok"
+            tags:
+                - Health
+    /health/ready:
+        get:
+            description: >-
+                An expanded health check, mostlye used for Docker or Kubernetes to check if a container is ready to receive requests. Will check dependencies of the API server along with the process of the server to verify that the server can process the requests.
+            responses:
+                "200":
+                    description: "The status of the server and its dependencies"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/StatusDto"
+                            examples:
+                                Healthy:
+                                    value:
+                                        status: "ok"
+                                        checks:
+                                            database: "up"
+                "503":
+                    description: "the status of the server and its dependencies"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/StatusDto"
+                            examples:
+                                Unhealthy:
+                                    value:
+                                        status: "unhealthy"
+                                        checks:
+                                            database:
+                                                status: "down"
+                                                error: "Reason why database is down"
+
+            tags:
+                - Health
+    /spells:
+        get:
+            description: >-
+                A list of all Spells.
+            responses:
+                "200":
+                    description: "The list of all Spells"
+                    content:
+                        application/json:
+                            schema:
+                                type: "array"
+                                items:
+                                    $ref: "#/components/schemas/SpellDto"
+                            examples:
+                                Spells:
+                                    value:
+                                        - id: "5x_tZeRlsAp8bE733WL_O"
+                                          name: "Fire Bolt"
+                                        - id: "w7aXUS-vDHKXNmQblzD5W"
+                                          name: "Acid Splash"
+            tags:
+                - Spells
+components:
+    schemas:
+        HealthStatus:
+            type: "string"
+            description: "The overal health status"
+            enum:
+                - ok
+                - unhealthy
+        RunningStatus:
+            type: "string"
+            description: "The running status of a single check"
+            enum:
+                - up
+                - down
+        CheckDto:
+            type: "object"
+            description: "The status of an individual dependency check"
+            properties:
+                status:
+                    $ref: "#/components/schemas/RunningStatus"
+                error:
+                    type: "string"
+                    description: "Optional error message if the check is not healthy"
+            required:
+                - status
+            additionalProperties: false
+            examples:
+                - status: "up"
+                - status: "down"
+                  error: "Reason why dependency is unhealthy"
+        StatusDto:
+            type: "object"
+            description: "The overall system status with individual checks"
+            properties:
+                status:
+                    $ref: "#/components/schemas/HealthStatus"
+                checks:
+                    type: "object"
+                    description: "A map of checks for dependencies to either a running status or a detailed check object"
+                    additionalProperties:
+                        oneOf:
+                            - $ref: "#/components/schemas/RunningStatus"
+                            - $ref: "#/components/schemas/CheckDto"
+            required:
+                - status
+                - checks
+            additionalProperties: false
+            examples:
+                - status: "ok"
+                - status: "unhealthy"
+                - status: "ok"
+                  checks:
+                      database: "up"
+                - status: "unhealthy"
+                  checks:
+                      database:
+                          status: "down"
+                          error: "Reason why database is down"
+        SpellDto:
+            type: "object"
+            description: "A Spell resource"
+            properties:
+                id:
+                    type: "string"
+                    description: "A system identifier"
+                name:
+                    type: "string"
+                    description: "A human readable identifier"
+                    minLength: 3
+            required:
+                - id
+                - name
+            additionalProperties: false
+            examples:
+                - id: "w7aXUS-vDHKXNmQblzD5W"
+                  name: "Acid Splash"
