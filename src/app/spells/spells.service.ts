@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { CreateSpellDto } from '@dnd-mapp/dma-resources-server/models';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { SpellsRepository } from './spells.repository';
 
 @Injectable()
@@ -13,7 +14,22 @@ export class SpellsService {
         return await this.spellsRepository.findAll();
     }
 
+    public async create(data: CreateSpellDto) {
+        const { name } = data;
+
+        if (!(await this.isSpellNameUnique(name))) {
+            throw new BadRequestException(`Could not create Spell. - Reason: Name "${name}" is already in use`);
+        }
+        return await this.spellsRepository.create(data);
+    }
+
     private async getByName(name: string) {
         return await this.spellsRepository.findOneByName(name);
+    }
+
+    private async isSpellNameUnique(name: string) {
+        const spellByName = await this.getByName(name);
+
+        return spellByName === null;
     }
 }
