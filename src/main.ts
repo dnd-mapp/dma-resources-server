@@ -6,22 +6,7 @@ import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { FastifyInstance } from 'fastify';
 import { resolve } from 'path';
-import { AppConfiguration, AppModule } from './app';
-import { getSSLFiles, sslEnabled } from './app/config/app.configuration';
-
-function serverAddress(host: string, port: number) {
-    let address = '';
-
-    if (sslEnabled()) address += 'https://';
-    else address += 'http://';
-
-    address += host;
-
-    if (!((port === 443 && sslEnabled()) || (port === 80 && !sslEnabled()))) {
-        address += `:${port}`;
-    }
-    return `${address}/server`;
-}
+import { AppConfiguration, AppModule, getSSLFiles, serverAddress, sslEnabled } from './app';
 
 async function bootstrap() {
     const { cert, key } = await getSSLFiles();

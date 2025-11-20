@@ -1,2 +1,3 @@
 export * from './app.module';
-export { AppConfiguration } from './config';
+export { AppConfiguration, getSSLFiles, sslEnabled } from './config';
+export { serverAddress } from './utils';
