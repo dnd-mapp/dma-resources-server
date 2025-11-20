@@ -1,5 +1,6 @@
-const { resolve } = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const GeneratePackageJsonPlugin = require('generate-package-json-webpack-plugin');
+const { resolve } = require('path');
 const nodeExternals = require('webpack-node-externals');
 
 const basePackageJson = {
@@ -29,6 +30,11 @@ module.exports = (options) => {
             ...options.plugins,
             new GeneratePackageJsonPlugin(basePackageJson, {
                 excludeDependencies: ['node:path', 'node:url', 'node:buffer'],
+            }),
+            new CopyWebpackPlugin({
+                patterns: [
+                    { from: resolve(__dirname, 'public'), to: resolve(__dirname, 'dist/dma-resources-server/public') },
+                ],
             }),
         ],
     };
