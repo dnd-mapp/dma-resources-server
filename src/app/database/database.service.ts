@@ -4,6 +4,7 @@ import { ConsoleLogger, Inject, Injectable, OnApplicationShutdown, OnModuleInit 
 import { ConfigService } from '@nestjs/config';
 import { PrismaMariaDb } from '@prisma/adapter-mariadb';
 import { DatabaseConfiguration } from '../config';
+import { tryCatchAsync } from '../utils';
 
 @Injectable()
 export class DatabaseService implements OnModuleInit, OnApplicationShutdown {
@@ -27,16 +28,29 @@ export class DatabaseService implements OnModuleInit, OnApplicationShutdown {
             user: username,
             password: password,
             database: schema,
+            connectionLimit: 5,
+            connectTimeout: 3000,
+            acquireTimeout: 3000,
         });
 
         this._prismaClient = new PrismaClient({ adapter: this.adapter });
     }
 
     public async onModuleInit() {
-        await this._prismaClient.$connect();
+        await this.prismaClient.$connect();
+        await this.testDatabaseConnection();
     }
 
     public async onApplicationShutdown() {
-        await this._prismaClient.$disconnect();
+        await this.prismaClient.$disconnect();
+    }
+
+    public async testDatabaseConnection() {
+        const { error } = await tryCatchAsync(this.prismaClient.$queryRaw`SELECT 1;`);
+
+        if (error) {
+            this.logger.error('Failed to connect to the database');
+            throw error;
+        }
     }
 }
