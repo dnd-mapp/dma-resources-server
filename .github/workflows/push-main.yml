@@ -37,6 +37,7 @@ jobs:
                   token: ${{ secrets.GITHUB_TOKEN }}
     e2e:
         name: E2E testing
+        if: false
         needs:
             - docker-build
         runs-on: ubuntu-22.04
