@@ -12,4 +12,8 @@ export class SpellsService {
     public async getAll() {
         return await this.spellsRepository.findAll();
     }
+
+    private async getByName(name: string) {
+        return await this.spellsRepository.findOneByName(name);
+    }
 }
