@@ -1,6 +1,6 @@
 import { createTestEnvironment, defaultSpell } from '@dnd-mapp/dma-resources-server/test';
-import { SpellsController } from './spells.controller';
 import { SpellsModule } from './spells.module';
+import { SpellsService } from './spells.service';
 
 jest.mock('../../prisma-client/client');
 
@@ -11,15 +11,13 @@ describe('SpellsController', () => {
         });
 
         return {
-            controller: app.get(SpellsController),
+            service: app.get(SpellsService),
         };
     }
 
     it('should get all Spells', async () => {
-        const { controller } = await setupTest();
+        const { service } = await setupTest();
 
-        expect(await controller.getAll()).toEqual(
-            expect.arrayContaining([expect.objectContaining({ id: defaultSpell.id })]),
-        );
+        expect(await service.getAll()).toEqual(expect.arrayContaining([expect.objectContaining(defaultSpell)]));
     });
 });
