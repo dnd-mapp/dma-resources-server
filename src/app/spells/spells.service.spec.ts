@@ -19,7 +19,7 @@ describe('SpellsController', () => {
     it('should get all Spells', async () => {
         const { service } = await setupTest();
 
-        expect(await service.getAll()).toEqual(expect.arrayContaining([expect.objectContaining(defaultSpell)]));
+        expect(await service.getAll()).toEqual([defaultSpell]);
     });
 
     it('should create a new Spell', async () => {
@@ -39,5 +39,11 @@ describe('SpellsController', () => {
         await expect(service.create(new CreateSpellBuilder().withName(defaultSpell.name).build())).rejects.toThrow(
             `Could not create Spell. - Reason: Name "${defaultSpell.name}" is already in use`,
         );
+    });
+
+    it('should return a single Spell by ID', async () => {
+        const { service } = await setupTest();
+
+        expect(await service.getById(defaultSpell.id)).toEqual(defaultSpell);
     });
 });

@@ -1,5 +1,5 @@
 import { CreateSpellDto } from '@dnd-mapp/dma-resources-server/models';
-import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, NotFoundException, Param, Post, Res } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 import { getServerAddress } from '../utils';
 import { SpellsService } from './spells.service';
@@ -25,5 +25,13 @@ export class SpellsController {
         response.status(HttpStatus.CREATED).headers({ Location: `${baseUrl}/${created.id}` });
 
         return created;
+    }
+
+    @Get('/:id')
+    public async getById(@Param('id') id: string) {
+        const byId = await this.spellsService.getById(id);
+
+        if (byId === null) throw new NotFoundException(`Could not find Spell with ID "${id}"`);
+        return byId;
     }
 }

@@ -14,6 +14,10 @@ export class SpellsService {
         return await this.spellsRepository.findAll();
     }
 
+    public async getById(id: string) {
+        return await this.spellsRepository.findOneById(id);
+    }
+
     public async create(data: CreateSpellDto) {
         const { name } = data;
 
