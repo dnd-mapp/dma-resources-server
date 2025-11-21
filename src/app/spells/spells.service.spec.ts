@@ -1,3 +1,4 @@
+import { CreateSpellBuilder } from '@dnd-mapp/dma-resources-server/models';
 import { createTestEnvironment, defaultSpell } from '@dnd-mapp/dma-resources-server/test';
 import { SpellsModule } from './spells.module';
 import { SpellsService } from './spells.service';
@@ -19,5 +20,24 @@ describe('SpellsController', () => {
         const { service } = await setupTest();
 
         expect(await service.getAll()).toEqual(expect.arrayContaining([expect.objectContaining(defaultSpell)]));
+    });
+
+    it('should create a new Spell', async () => {
+        const { service } = await setupTest();
+
+        expect(await service.create(new CreateSpellBuilder().withName('Fire Ball').build())).toEqual(
+            expect.objectContaining({
+                id: expect.any(String),
+                name: 'Fire Ball',
+            }),
+        );
+    });
+
+    it('should not create a Spell with a non-unique name', async () => {
+        const { service } = await setupTest();
+
+        await expect(service.create(new CreateSpellBuilder().withName(defaultSpell.name).build())).rejects.toThrow(
+            `Could not create Spell. - Reason: Name "${defaultSpell.name}" is already in use`,
+        );
     });
 });
