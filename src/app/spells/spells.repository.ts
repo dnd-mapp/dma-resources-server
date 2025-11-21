@@ -17,6 +17,12 @@ export class SpellsRepository {
         return createInstances(queryResult, Spell);
     }
 
+    public async findOneById(id: string) {
+        const queryResult = await this.databaseService.prismaClient.spells.findFirst({ where: { id: id } });
+
+        return createInstance(queryResult, Spell);
+    }
+
     public async findOneByName(name: string) {
         const queryResult = await this.databaseService.prismaClient.spells.findFirst({ where: { name: name } });
 

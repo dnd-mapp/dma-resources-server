@@ -8,10 +8,11 @@ class MockSpellDB {
         return Object.values(this.records);
     }
 
-    public findFirst(args: { where: { name?: string } }) {
-        const { name } = args.where;
+    public findFirst(args: { where: { id?: string; name?: string } }) {
+        const { id, name } = args.where;
 
-        if (name) return this.findByName(name);
+        if (id) return this.findOneById(id);
+        if (name) return this.findOneByName(name);
         return null;
     }
 
@@ -32,7 +33,11 @@ class MockSpellDB {
         };
     }
 
-    private findByName(name: string) {
+    private findOneById(id: string) {
+        return Object.values(this.records).find((spell) => spell.id === id) ?? null;
+    }
+
+    private findOneByName(name: string) {
         return Object.values(this.records).find((spell) => spell.name === name) ?? null;
     }
 }
