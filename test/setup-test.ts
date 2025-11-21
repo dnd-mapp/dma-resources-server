@@ -1,5 +1,7 @@
-import { resetDatabases } from './mocks';
+import { resetMocks } from './mocks';
 
 jest.mock('@prisma/adapter-mariadb');
 
-resetDatabases();
+beforeEach(() => {
+    resetMocks();
+});
