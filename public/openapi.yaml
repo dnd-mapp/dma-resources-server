@@ -22,16 +22,14 @@ paths:
                 a container is live. This check simply returns whether the server
                 process is up and running.
             responses:
-                "200":
+                200:
                     description: "The status of the server"
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/StatusDto"
-                            examples:
-                                Healthy:
-                                    value:
-                                        status: "ok"
+                                examples:
+                                    - status: "ok"
             tags:
                 - Health
     /health/ready:
@@ -39,41 +37,36 @@ paths:
             description: >-
                 An expanded health check, mostlye used for Docker or Kubernetes to check if a container is ready to receive requests. Will check dependencies of the API server along with the process of the server to verify that the server can process the requests.
             responses:
-                "200":
+                200:
                     description: "The status of the server and its dependencies"
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/StatusDto"
-                            examples:
-                                Healthy:
-                                    value:
-                                        status: "ok"
-                                        checks:
-                                            database: "up"
-                "503":
+                                examples:
+                                    - status: "ok"
+                                      checks:
+                                          database: "up"
+                503:
                     description: "the status of the server and its dependencies"
                     content:
                         application/json:
                             schema:
                                 $ref: "#/components/schemas/StatusDto"
-                            examples:
-                                Unhealthy:
-                                    value:
-                                        status: "unhealthy"
-                                        checks:
-                                            database:
-                                                status: "down"
-                                                error: "Reason why database is down"
-
+                                examples:
+                                    - status: "unhealthy"
+                                      checks:
+                                          database:
+                                              status: "down"
+                                              error: "Reason why database is down"
             tags:
                 - Health
     /spells:
         get:
             description: >-
-                A list of all Spells.
+                Gets a list of all Spells
             responses:
-                "200":
+                200:
                     description: "The list of all Spells"
                     content:
                         application/json:
@@ -99,7 +92,7 @@ paths:
                             examples:
                                 - name: "Acid Splash"
             responses:
-                "200":
+                200:
                     description: "The created Spell"
                     headers:
                         Location:
@@ -115,7 +108,7 @@ paths:
                                 examples:
                                     - id: "5x_tZeRlsAp8bE733WL_O"
                                       name: "Fire Bolt"
-                "400":
+                400:
                     description: "Indicates when something is wrong with the request that the User can fix"
                     content:
                         application/json:
@@ -127,6 +120,35 @@ paths:
                                       statusCode: 400
             tags:
                 - Spells
+    /spells/{spell_id}:
+        parameters:
+            - name: "spell_id"
+              in: "path"
+              required: true
+              description: "The ID of the Spell"
+              schema:
+                  type: "string"
+        get:
+            description: >-
+                Gets a single Spell
+            responses:
+                200:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/SpellDto"
+                                examples:
+                                    - id: "w7aXUS-vDHKXNmQblzD5W"
+                                      name: "Acid Splash"
+                404:
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ErrorDto"
+                                examples:
+                                    - message: 'Could not find Spell with ID "w7aXUS-vDHKXNmQblzD5W"'
+                                      error: "Not Found"
+                                      statusCode: 404
 components:
     schemas:
         HealthStatus:
