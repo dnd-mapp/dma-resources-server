@@ -1,7 +1,7 @@
-import { Spell } from '@dnd-mapp/dma-resources-server/models';
+import { CreateSpellDto, Spell } from '@dnd-mapp/dma-resources-server/models';
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '../database';
-import { createInstances } from '../utils';
+import { createInstance, createInstances } from '../utils';
 
 @Injectable()
 export class SpellsRepository {
@@ -15,5 +15,21 @@ export class SpellsRepository {
         const queryResult = await this.databaseService.prismaClient.spells.findMany();
 
         return createInstances(queryResult, Spell);
+    }
+
+    public async findOneByName(name: string) {
+        const queryResult = await this.databaseService.prismaClient.spells.findFirst({ where: { name: name } });
+
+        return createInstance(queryResult, Spell);
+    }
+
+    public async create(data: CreateSpellDto) {
+        const queryResult = await this.databaseService.prismaClient.spells.create({
+            data: {
+                name: data.name,
+            },
+        });
+
+        return createInstance(queryResult, Spell);
     }
 }

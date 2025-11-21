@@ -27,5 +27,11 @@ export default tseslint.config(
             '@typescript-eslint/no-floating-promises': 'off',
         },
     },
+    {
+        files: ['**/*.spec.ts'],
+        rules: {
+            '@typescript-eslint/no-unsafe-assignment': 'off',
+        },
+    },
     eslintConfigPrettier,
 );

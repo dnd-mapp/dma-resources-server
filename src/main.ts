@@ -6,22 +6,7 @@ import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { FastifyInstance } from 'fastify';
 import { resolve } from 'path';
-import { AppConfiguration, AppModule } from './app';
-import { getSSLFiles, sslEnabled } from './app/config/app.configuration';
-
-function serverAddress(host: string, port: number) {
-    let address = '';
-
-    if (sslEnabled()) address += 'https://';
-    else address += 'http://';
-
-    address += host;
-
-    if (!((port === 443 && sslEnabled()) || (port === 80 && !sslEnabled()))) {
-        address += `:${port}`;
-    }
-    return `${address}/server`;
-}
+import { AppConfiguration, AppModule, getSSLFiles, getServerAddress, setServerAddress, sslEnabled } from './app';
 
 async function bootstrap() {
     const { cert, key } = await getSSLFiles();
@@ -42,7 +27,9 @@ async function bootstrap() {
 
     const fastifyInstance = app.getHttpAdapter().getInstance() as FastifyInstance;
     const configService = app.get(ConfigService);
+
     const { host, port } = configService.get<AppConfiguration>('app');
+    setServerAddress(host, port);
 
     app.setGlobalPrefix('server');
 
@@ -66,7 +53,7 @@ async function bootstrap() {
     });
 
     await app.listen(port, host, () => {
-        Logger.log(`The D&D Mapp Resources server is available on: ${serverAddress(host, port)}`, 'NestApplication');
+        Logger.log(`The D&D Mapp Resources server is available on: ${getServerAddress()}`, 'NestApplication');
     });
 }
 
