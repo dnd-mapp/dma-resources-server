@@ -1,10 +1,10 @@
 import { sslEnabled } from '../../config';
 import { DEFAULT_HOST, DEFAULT_PORT } from '../../constants';
 
-let address = '';
+let address = `http://${DEFAULT_HOST}:${DEFAULT_PORT}/server`;
 
-export function serverAddress(host: string = DEFAULT_HOST, port: number = DEFAULT_PORT) {
-    if (address) return address;
+export function setServerAddress(host: string = DEFAULT_HOST, port: number = DEFAULT_PORT) {
+    address = '';
 
     if (sslEnabled()) address += 'https://';
     else address += 'http://';
@@ -14,5 +14,10 @@ export function serverAddress(host: string = DEFAULT_HOST, port: number = DEFAUL
     if (!((port === 443 && sslEnabled()) || (port === 80 && !sslEnabled()))) {
         address += `:${port}`;
     }
-    return `${address}/server`;
+    address += '/server';
+}
+
+export function getServerAddress(includeGlobalPrefix = true) {
+    if (includeGlobalPrefix) return address;
+    else return address.replace('/server', '');
 }

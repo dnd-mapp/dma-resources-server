@@ -1,7 +1,7 @@
 import { CreateSpellDto } from '@dnd-mapp/dma-resources-server/models';
 import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
-import { serverAddress } from '../utils';
+import { getServerAddress } from '../utils';
 import { SpellsService } from './spells.service';
 
 @Controller('/spells')
@@ -20,7 +20,7 @@ export class SpellsController {
     @Post()
     public async create(@Body() data: CreateSpellDto, @Res({ passthrough: true }) response: FastifyReply) {
         const created = await this.spellsService.create(data);
-        const baseUrl = `${serverAddress()}${response.request.url}`;
+        const baseUrl = `${getServerAddress(false)}${response.request.url}`;
 
         response.status(HttpStatus.CREATED).headers({ Location: `${baseUrl}/${created.id}` });
 
