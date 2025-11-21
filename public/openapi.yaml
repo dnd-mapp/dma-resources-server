@@ -81,13 +81,50 @@ paths:
                                 type: "array"
                                 items:
                                     $ref: "#/components/schemas/SpellDto"
+                                examples:
+                                    - - id: "5x_tZeRlsAp8bE733WL_O"
+                                        name: "Fire Bolt"
+                                      - id: "w7aXUS-vDHKXNmQblzD5W"
+                                        name: "Acid Splash"
+            tags:
+                - Spells
+        post:
+            description: >-
+                Creates a new Spell.
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/CreateSpellDto"
                             examples:
-                                Spells:
-                                    value:
-                                        - id: "5x_tZeRlsAp8bE733WL_O"
-                                          name: "Fire Bolt"
-                                        - id: "w7aXUS-vDHKXNmQblzD5W"
-                                          name: "Acid Splash"
+                                - name: "Acid Splash"
+            responses:
+                "200":
+                    description: "The created Spell"
+                    headers:
+                        Location:
+                            description: "Where to find the newly created Spell"
+                            schema:
+                                type: "string"
+                                format: "uri"
+                                example: "http://localhost:3000/server/spells/5x_tZeRlsAp8bE733WL_O"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/SpellDto"
+                                examples:
+                                    - id: "5x_tZeRlsAp8bE733WL_O"
+                                      name: "Fire Bolt"
+                "400":
+                    description: "Indicates when something is wrong with the request that the User can fix"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ErrorDto"
+                                examples:
+                                    - message: 'Could not create Spell. - Reason: Name "Acid Splash" is already in use'
+                                      error: "Bad Request"
+                                      statusCode: 400
             tags:
                 - Spells
 components:
@@ -148,6 +185,23 @@ components:
                       database:
                           status: "down"
                           error: "Reason why database is down"
+        ErrorDto:
+            type: "object"
+            properties:
+                message:
+                    type: "string"
+                    description: "Indicates what exactly went wrong"
+                error:
+                    type: "string"
+                    description: "The name of the error"
+                statusCode:
+                    type: "integer"
+                    description: "The error code"
+            required:
+                - message
+                - error
+                - statusCode
+            additionalProperties: false
         SpellDto:
             type: "object"
             description: "A Spell resource"
@@ -166,3 +220,13 @@ components:
             examples:
                 - id: "w7aXUS-vDHKXNmQblzD5W"
                   name: "Acid Splash"
+        CreateSpellDto:
+            type: "object"
+            properties:
+                name:
+                    type: "string"
+                    description: "A human readable identifier"
+                    minLength: 3
+            required:
+                - name
+            additionalProperties: false
