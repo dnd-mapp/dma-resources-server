@@ -1,4 +1,4 @@
-import { CreateSpellBuilder } from '@dnd-mapp/dma-resources-server/models';
+import { CreateSpellBuilder, SpellBuilder } from '@dnd-mapp/dma-resources-server/models';
 import { createTestEnvironment, defaultSpell, mockSpellDB } from '@dnd-mapp/dma-resources-server/test';
 import { nanoid } from 'nanoid';
 import { SpellsModule } from './spells.module';
@@ -42,7 +42,7 @@ describe('SpellsController', () => {
         );
     });
 
-    it('should not create a Spell with a non-unique name', async () => {
+    it('should throw a BadRequest when creating a Spell with a non-unique name', async () => {
         const { service } = await setupTest();
 
         const data = new CreateSpellBuilder().withName(defaultSpell.name).build();
@@ -80,6 +80,41 @@ describe('SpellsController', () => {
 
         await expect(service.removeById(spellId)).rejects.toThrow(
             `Could not remove Spell with ID "${spellId}". - Reason: Spell does not exist`,
+        );
+    });
+
+    it('should update a Spell', async () => {
+        const { service } = await setupTest();
+
+        const spell = new SpellBuilder().withId(defaultSpell.id).withName('Fire Ball').build();
+
+        expect(mockSpellDB.findFirst({ where: { name: defaultSpell.name } })).not.toEqual(null);
+
+        const updated = await service.update(spell);
+        expect(mockSpellDB.findFirst({ where: { name: defaultSpell.name } })).toEqual(null);
+        expect(mockSpellDB.findFirst({ where: { id: updated.id } })).toEqual(
+            expect.objectContaining({ name: 'Fire Ball' }),
+        );
+    });
+
+    it('should throw a NotFoundException when updating a non-existing Spell', async () => {
+        const { service } = await setupTest();
+
+        const spell = new SpellBuilder().withId().build();
+
+        await expect(service.update(spell)).rejects.toThrow(
+            `Could not update Spell with ID "${spell.id}". - Reason: Spell does not exist`,
+        );
+    });
+
+    it('should throw a BadRequestException when updating a Spell with a non-unique name', async () => {
+        const { service } = await setupTest();
+
+        const { id } = mockSpellDB.create({ data: { name: 'Fire Ball' } });
+        const spell = new SpellBuilder().withId(id).withName(defaultSpell.name).build();
+
+        await expect(service.update(spell)).rejects.toThrow(
+            `Could not update Spell with ID "${id}". - Reason: Name "${spell.name}" is already in use`,
         );
     });
 });

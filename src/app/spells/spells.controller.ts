@@ -1,5 +1,17 @@
-import { CreateSpellDto } from '@dnd-mapp/dma-resources-server/models';
-import { Body, Controller, Delete, Get, HttpStatus, NotFoundException, Param, Post, Res } from '@nestjs/common';
+import { CreateSpellDto, Spell } from '@dnd-mapp/dma-resources-server/models';
+import {
+    BadRequestException,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpStatus,
+    NotFoundException,
+    Param,
+    Post,
+    Put,
+    Res,
+} from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 import { getServerAddress } from '../utils';
 import { SpellsService } from './spells.service';
@@ -33,6 +45,16 @@ export class SpellsController {
 
         if (byId === null) throw new NotFoundException(`Could not find Spell with ID "${id}"`);
         return byId;
+    }
+
+    @Put('/:id')
+    public async update(@Param('id') id: string, @Body() data: Spell) {
+        if (data.id !== id) {
+            throw new BadRequestException(
+                `Could not update Spell with ID "${id}". - Reason: ID in body "${data.id}" does not match URL parameter`,
+            );
+        }
+        return await this.spellsService.update(data);
     }
 
     @Delete('/:id')
