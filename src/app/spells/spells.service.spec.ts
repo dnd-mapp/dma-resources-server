@@ -1,5 +1,6 @@
 import { CreateSpellBuilder } from '@dnd-mapp/dma-resources-server/models';
 import { createTestEnvironment, defaultSpell, mockSpellDB } from '@dnd-mapp/dma-resources-server/test';
+import { nanoid } from 'nanoid';
 import { SpellsModule } from './spells.module';
 import { SpellsService } from './spells.service';
 
@@ -58,5 +59,27 @@ describe('SpellsController', () => {
         const { service } = await setupTest();
 
         expect(await service.getById(defaultSpell.id)).toEqual(defaultSpell);
+    });
+
+    it('should remove a Spell by ID', async () => {
+        const { service } = await setupTest();
+
+        expect(mockSpellDB.findFirst({ where: { id: defaultSpell.id } })).not.toBe(null);
+
+        await service.removeById(defaultSpell.id);
+
+        expect(mockSpellDB.findFirst({ where: { id: defaultSpell.id } })).toBe(null);
+    });
+
+    it('should throw a NotFoundException when removing a non-existing Spell by ID', async () => {
+        const { service } = await setupTest();
+
+        const spellId = nanoid();
+
+        expect(mockSpellDB.findFirst({ where: { id: spellId } })).toBe(null);
+
+        await expect(service.removeById(spellId)).rejects.toThrow(
+            `Could not remove Spell with ID "${spellId}". - Reason: Spell does not exist`,
+        );
     });
 });

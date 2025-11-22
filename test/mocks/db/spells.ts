@@ -27,6 +27,11 @@ class MockSpellDB {
         return spell;
     }
 
+    public delete(args: { where: { id: string } }) {
+        const { id } = args.where;
+        delete this.records[id];
+    }
+
     public reset() {
         this.records = {
             [defaultSpell.id]: defaultSpell,
