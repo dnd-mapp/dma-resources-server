@@ -39,6 +39,17 @@ export class SpellsRepository {
         return createInstance(queryResult, Spell);
     }
 
+    public async update(data: Spell) {
+        const queryResult = await this.databaseService.prismaClient.spells.update({
+            where: { id: data.id },
+            data: {
+                name: data.name,
+            },
+        });
+
+        return createInstance(queryResult, Spell);
+    }
+
     public async deleteOneById(id: string) {
         await this.databaseService.prismaClient.spells.delete({ where: { id: id } });
     }

@@ -1,4 +1,4 @@
-import { CreateSpellDto } from '@dnd-mapp/dma-resources-server/models';
+import { CreateSpellDto, Spell } from '@dnd-mapp/dma-resources-server/models';
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { SpellsRepository } from './spells.repository';
 
@@ -21,10 +21,25 @@ export class SpellsService {
     public async create(data: CreateSpellDto) {
         const { name } = data;
 
-        if (!(await this.isSpellNameUnique(name))) {
+        if (await this.isNameInUse(name)) {
             throw new BadRequestException(`Could not create Spell. - Reason: Name "${name}" is already in use`);
         }
         return await this.spellsRepository.create(data);
+    }
+
+    public async update(data: Spell) {
+        const { id, name } = data;
+        const spellById = await this.getById(id);
+
+        if (spellById === null) {
+            throw new NotFoundException(`Could not update Spell with ID "${id}". - Reason: Spell does not exist`);
+        }
+        if (await this.isNameInUse(name, id)) {
+            throw new BadRequestException(
+                `Could not update Spell with ID "${id}". - Reason: Name "${name}" is already in use`,
+            );
+        }
+        return await this.spellsRepository.update(data);
     }
 
     public async removeById(id: string) {
@@ -39,9 +54,9 @@ export class SpellsService {
         return await this.spellsRepository.findOneByName(name);
     }
 
-    private async isSpellNameUnique(name: string) {
+    private async isNameInUse(name: string, id: string = null) {
         const spellByName = await this.getByName(name);
 
-        return spellByName === null;
+        return spellByName !== null && (id === null || spellByName.id !== id);
     }
 }

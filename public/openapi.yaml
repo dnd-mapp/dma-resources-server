@@ -151,6 +151,49 @@ paths:
                                     - message: 'Could not find Spell with ID "w7aXUS-vDHKXNmQblzD5W"'
                                       error: "Not Found"
                                       statusCode: 404
+        put:
+            tags:
+                - Spells
+            description: >-
+                Updates an existing Spell.
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/SpellDto"
+                            examples:
+                                - id: "w7aXUS-vDHKXNmQblzD5W"
+                                  name: "Acid Splash"
+            responses:
+                200:
+                    description: "The updated Spell"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/SpellDto"
+                                examples:
+                                    - id: "w7aXUS-vDHKXNmQblzD5W"
+                                      name: "Acid Splash"
+                400:
+                    description: "Indicates when something is wrong with the request that the User can fix"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ErrorDto"
+                                examples:
+                                    - message: 'Could not update Spell with ID "w7aXUS-vDHKXNmQblzD5W". - Reason: ID in body "5x_tZeRlsAp8bE733WL_O" does not match URL parameter'
+                                      error: "Bad Request"
+                                      statusCode: 400
+                404:
+                    description: "Indicates when the Spell to update does not exist"
+                    content:
+                        application/json:
+                            schema:
+                                $ref: "#/components/schemas/ErrorDto"
+                                examples:
+                                    - message: 'Could not update Spell with ID "w7aXUS-vDHKXNmQblzD5W". - Reason: Spell does not exist'
+                                      error: "Not Found"
+                                      statusCode: 404
         delete:
             tags:
                 - Spells
