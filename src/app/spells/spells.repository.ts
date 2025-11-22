@@ -38,4 +38,8 @@ export class SpellsRepository {
 
         return createInstance(queryResult, Spell);
     }
+
+    public async deleteOneById(id: string) {
+        await this.databaseService.prismaClient.spells.delete({ where: { id: id } });
+    }
 }

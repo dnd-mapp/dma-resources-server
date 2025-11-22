@@ -1,5 +1,5 @@
 import { CreateSpellDto } from '@dnd-mapp/dma-resources-server/models';
-import { Body, Controller, Get, HttpStatus, NotFoundException, Param, Post, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpStatus, NotFoundException, Param, Post, Res } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 import { getServerAddress } from '../utils';
 import { SpellsService } from './spells.service';
@@ -33,5 +33,12 @@ export class SpellsController {
 
         if (byId === null) throw new NotFoundException(`Could not find Spell with ID "${id}"`);
         return byId;
+    }
+
+    @Delete('/:id')
+    public async removeById(@Param('id') id: string, @Res({ passthrough: true }) response: FastifyReply) {
+        await this.spellsService.removeById(id);
+
+        response.status(HttpStatus.NO_CONTENT);
     }
 }
